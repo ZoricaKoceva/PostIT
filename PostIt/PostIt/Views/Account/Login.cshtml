@@ -1,0 +1,52 @@
+﻿@using PostIt.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Најавување";
+}
+
+<div class="login-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <section id="loginForm">
+                    <h2>@ViewBag.Title</h2>
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <h4>Најавете се за да ги користите сите функционалности.</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "" })
+                            <div class="">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "" })
+                            <div class="">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Најави се" class="btn btn-primary" />
+                        </div>
+                        <p>
+                            Се немаш регистрирано? @Html.ActionLink("Регистрирај се сега!", "Register")
+                        </p>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

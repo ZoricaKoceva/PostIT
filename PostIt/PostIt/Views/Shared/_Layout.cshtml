@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - PostIt | Број еден огласи во Македонија</title>
+	<link rel="icon" href="~/Images/favicon.png">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="pull-left">
+                <a href="/Home/Index" class="logo"><img src="~/Images/favicon.png" /><span>PostIt</span></a>
+                <form action="/Products/Search" method="post" class="search">
+                    <i class="fa fa-fw fa-search"></i>
+                    <input type="text" class="form-control" name="query" placeholder="Пребарувај огласи..." />
+                    <input type="submit" class="btn btn-primary" value="Пребарај" />
+                </form>
+            </div>
+            <div class="pull-right">
+                @Html.Partial("_LoginPartial")
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/Home/Index"><i class="fa fa-fw fa-home"></i> Почетна</a></li>
+                    @Html.Action("Navbar", "Categories")
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div>
+        @RenderBody()
+        <footer>
+            <div class="container">
+                <div class="pull-left">&copy; @DateTime.Now.Year Сите права се задржани</div>
+                <div class="pull-right">Филип Стаменковски, Марија Ѓоргиевска, Ивана Ѓоршоска, Зорица Коцева</div>
+                <div class="clearfix"></div>
+            </div>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Направи ги сите реклами да имат иста висина
+            var max = 0;
+            $(".product-box").each(function () {
+                if ($(this).outerHeight() > max) {
+                    max = $(this).outerHeight();
+                }
+            })
+            $(".product-box").css("height", max);
+        })
+    </script>
+}

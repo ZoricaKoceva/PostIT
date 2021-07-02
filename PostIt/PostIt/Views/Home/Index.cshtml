@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PostIt.Models.Category>
+@{
+    ViewBag.Title = "Почетна";
+}
+
+<div class="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Пребарувај огласи</h1>
+                <h3>PostIt е онлајн платформа за купопродажба на различни производи, предмети и услуги</h3>
+                <p>Изберете ја соодветната категорија, и започнете со пребарувањето! Оваа платформа содржи огромен број на продукти во различни категории. Доколку сте заинтересирани за купување на некој продукт, контактирајте го сопственикот.</p>
+                <form action="/Products/Search" method="post">
+                    <input class="form-control" name="query" placeholder="Пребарувај автомобили, недвижности, компјутери..." autocomplete="off" />
+                    <input type="submit" class="btn btn-primary" value="Пребарувај" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ова се категориите -->
+<div class="categories">
+    <div class="container">
+        <h1>Категории на огласи<span>Изберете ја вашата барана категорија и започнете со пребарување</span></h1>
+        @foreach (var category in Model)
+        {<a href="/Products/Index?category=@category.Id" class="category-box">
+                <img src="@category.Image" />
+                <b>@category.Name</b>
+            </a>}
+    </div>
+</div>
+
+<!-- Ова е пример за Најпопуларни реклами, ќе треба нов View -->
+@Html.Action("Popular", "Products");
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".navbar-inverse .navbar-nav > li:first-child").addClass("active");
+        })
+    </script>
+}

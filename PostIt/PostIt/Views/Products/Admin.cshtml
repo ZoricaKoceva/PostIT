@@ -1,0 +1,249 @@
+﻿@model IEnumerable<PostIt.Models.Product>
+@{
+    ViewBag.Title = "Администрациски панел";
+}
+
+<div class="admin-panel">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Администрациски панел<span>Добредојдовте во контролниот панел на PostIt. Од овде можете да одобрите, или избришете огласи.</span></h1>
+            </div>
+            <div class="col-sm-5 col-sm-offset-1">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="admin-box">
+                            <h3 id="vkupno">@Model.Count()</h3>
+                            <span>Вкупно огласи</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="admin-box">
+                            <h3 id="neodobreni">@Model.Where(x => x.Approved == false).Count()</h3>
+                            <span>Неодобрени огласи</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="admin-box">
+                            <h3 id="odobreni">@Model.Where(x => x.Approved == true).Count()</h3>
+                            <span>Одобрени огласи</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="admin-box">
+                            <h3>@ViewBag.Users.Count</h3>
+                            <span>Вкупно корисници</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-bottom:0px;" />
+        <ul class="custom-ul">
+            <li class="active"><a href="#tab1">Неодобрени огласи</a></li>
+            <li><a href="#tab2">Одобрени огласи</a></li>
+            <li><a href="#tab3">Корисници</a></li>
+        </ul>
+        <div class="custom-tabs">
+            <div class="tab active" id="tab1">
+                <h2>Огласи кои очекуваат одобрение</h2>
+                <table class="table table-hover table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>ИД</th>
+                            <th>Датум</th>
+                            <th>Наслов</th>
+                            <th>Категорија</th>
+                            <th>Корисник</th>
+                            <th>Акција</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Product in Model)
+                        {
+                            if (Product.Approved == false)
+                            {
+                                <tr data-id="@Product.Id" data-datetime="@Product.DateTime" data-title="@Product.Title" data-user="@Product.User.FirstSecondName" data-category="@Product.Category.Name">
+                                    <td>@Product.Id</td>
+                                    <td>@Product.DateTime</td>
+                                    <td><a href="/Products/Details/@Product.Id">@Product.Title</a></td>
+                                    <td>@Product.Category.Name</td>
+                                    <td>@Product.User.FirstSecondName</td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary btn-sm" data-action="approve" data-id="@Product.Id"><i class="fa fa-fw fa-check"></i> Одобри</a>
+                                        <a href="#" class="btn btn-danger btn-sm" data-action="remove" data-id="@Product.Id" data-target="table1"><i class="fa fa-fw fa-trash"></i> Избриши</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab" id="tab2">
+                <h2>Активни огласи</h2>
+                <table class="table table-hover table-striped" id="table2">
+                    <thead>
+                        <tr>
+                            <th>ИД</th>
+                            <th>Датум</th>
+                            <th>Наслов</th>
+                            <th>Категорија</th>
+                            <th>Корисник</th>
+                            <th>Акција</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Product in Model)
+                        {
+                            if (Product.Approved == true)
+                            {
+                                <tr>
+                                    <td>@Product.Id</td>
+                                    <td>@Product.DateTime</td>
+                                    <td><a href="/Products/Details/@Product.Id">@Product.Title</a></td>
+                                    <td>@Product.Category.Name</td>
+                                    <td>@Product.User.FirstSecondName</td>
+                                    <td>
+                                        <a href="#" class="btn btn-danger btn-sm" data-action="remove" data-id="@Product.Id" data-target="table2"><i class="fa fa-fw fa-trash"></i> Избриши</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab" id="tab3">
+                <h2>Активни огласи</h2>
+                <table class="table table-hover table-striped" id="table3">
+                    <thead>
+                        <tr>
+                            <th>Име и презиме</th>
+                            <th>Емаил</th>
+                            <th>Акција</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var index = 0;}
+                        @foreach (var UserLogged in ViewBag.Users)
+                        {
+                            <tr>
+                                <td>@UserLogged.FirstSecondName</td>
+                                <td>@UserLogged.Email</td>
+                                <td>
+                                    @if (ViewBag.IsAdmin[index] == 0)
+                                    {
+                                    <a href="#" class="btn btn-primary btn-sm" data-action="addAdmin" data-id="@UserLogged.Id" data-target="table3"><i class="fa fa-fw fa-check"></i> Постави администратор</a>
+                                    }
+                                    <a href="#" class="btn btn-danger btn-sm" data-action="removeUser" data-id="@UserLogged.Id" data-target="table3"><i class="fa fa-fw fa-trash"></i> Избриши</a>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            /* Custom tabs functionality */
+            $(".custom-ul li a").click(function (e) {
+                e.preventDefault();
+                $(".custom-ul li").removeClass("active");
+                $(this).parent().addClass("active");
+                $(".custom-tabs .tab").removeClass("active");
+                var target = $(this).attr("href");
+                $(target).addClass("active");
+            })
+
+            var table1 = $("#table1").DataTable();
+            var table2 = $("#table2").DataTable();
+            var table3 = $("#table3").DataTable();
+
+            $(document).on("click", "[data-action='remove']", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                var element = $(this);
+                var target = $(this).data("target");
+                $.ajax({
+                    url: '/Products/Delete',
+                    data: { id: id },
+                    success: function () {
+                        var rowElement = $(element).parents("tr");
+                        if (target == "table1")
+                        {
+                            table1.row(rowElement).remove().draw();
+                            $("#neodobreni").text(parseInt($("#neodobreni").text()) - 1);
+                        }
+                        else
+                        {
+                            table2.row(rowElement).remove().draw();
+                            $("#odobreni").text(parseInt($("#odobreni").text()) - 1);
+                        }
+                        $("#vkupno").text(parseInt($("#vkupno").text()) - 1);
+                    }
+                })
+            })
+            $(document).on("click", "[data-action='approve']", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                var element = $(this);
+                $.ajax({
+                    url: '/Products/ChangeStatusOfProduct',
+                    data: { productId: id, status: true },
+                    success: function (result) {
+                        if (result == "Success")
+                        {
+                            var rowElement = $(element).parents("tr");
+                            /* Ги чуваме податоците за да ги префрлиме во другата табела */
+                            var p_id = $(rowElement).data("id");
+                            var p_datetime = $(rowElement).data("datetime");
+                            var p_title = $(rowElement).data("title");
+                            var p_user = $(rowElement).data("user");
+                            var p_category = $(rowElement).data("category");
+                            table1.row(rowElement).remove().draw();
+                            table2.row.add([p_id, p_datetime, '<a href="/Products/Details/' + p_id + '">' + p_title + '</a>', p_category, p_user, '<a href="#" class="btn btn-danger btn-sm" data-action="remove" data-id="' + p_id + '" data-target="table2"><i class="fa fa-fw fa-trash"></i> Избриши</a>']).draw(false);
+                            $("#neodobreni").text(parseInt($("#neodobreni").text()) - 1);
+                            $("#odobreni").text(parseInt($("#odobreni").text()) + 1);
+                        }
+                        else
+                        {
+                            console.log("Something Happened");
+                        }
+                    }
+                })
+            })
+            $(document).on("click", "[data-action='removeUser']", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                var element = $(this);
+                var target = $(this).data("target");
+                $.ajax({
+                    url: '/Account/RemoveUser',
+                    data: { id: id },
+                    success: function () {
+                        var rowElement = $(element).parents("tr");
+                        table3.row(rowElement).remove().draw();
+                    }
+                })
+            })
+            $(document).on("click", "[data-action='addAdmin']", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                var element = $(this);
+                var target = $(this).data("target");
+                $.ajax({
+                    url: '/Account/AddUserAsAdmin',
+                    data: { id: id },
+                    success: function () {
+                        $(element).remove();
+                    }
+                })
+            })
+
+        })
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<PostIt.Models.Product>
+@{
+    ViewBag.Title = "Мои реклами";
+}
+
+<div class="local-pages">
+    <div class="container">
+        <h1>@ViewBag.Title<span>Контролирајте ги сите ваши реклами на едно место</span></h1>
+
+        <div>
+            <table id="table" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>ИД</th>
+                        <th>Име</th>
+                        <th>Категорија</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                        <th>Опции</th>
+                    </tr>
+                </thead>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Id</td>
+                        <td><a href="/Products/Details/@product.Id">@product.Title</a></td>
+                        <td>@product.Category.Name</td>
+                        <td>@String.Format("{0:N2}", product.Price) денари</td>
+                        <td>@if (product.Approved == true) { <span style="color:#27ae60"><i class="fa fa-fw fa-check"></i> Активен</span> } else { <span style="color:#f39c12;"><i class="fa fa-fw fa-refresh"></i> Се чека одобрување</span> }</td>
+                        <td>
+                            <a href="/Products/Delete/@product.Id" class="btn btn-danger btn-sm" data-action="remove" data-id="@product.Id" data-target="table"><i class="fa fa-fw fa-trash"></i> Избриши оглас</a>
+                            <a href="/Products/Edit/@product.Id" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-edit"></i> Промени оглас</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $("#table").DataTable();
+            $(document).on("click", "[data-action='remove']", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                var element = $(this);
+                var target = $(this).data("target");
+                $.ajax({
+                    url: '/Products/Delete',
+                    data: { id: id },
+                    success: function () {
+                        var rowElement = $(element).parents("tr");
+                        if (target == "table1") {
+                            table.row(rowElement).remove().draw();
+                        } else {
+                            table.row(rowElement).remove().draw();
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+}

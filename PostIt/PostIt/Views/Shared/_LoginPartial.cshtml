@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNet.Identity
+@using PostIt.Models
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="new-ul">
+            <li>
+                @{
+                    var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    var currentUser = manager.FindById(User.Identity.GetUserId());
+                }
+                @Html.ActionLink("Добредојде " + currentUser.FirstSecondName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            @if(User.IsInRole("Admin"))
+            {
+                <li><a href="/Products/Admin" style="font-weight:bold;color:#fff;">Админ Панел</a></li>
+            }
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Одјави се</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="new-ul">
+        <li>@Html.ActionLink("Регистрирај се", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Најави се", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+<a href="/Products/Create" class="btn btn-primary btn-lg">Додај Оглас</a>

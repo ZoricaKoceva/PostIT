@@ -1,0 +1,6 @@
+﻿@model IEnumerable<PostIt.Models.Category>
+
+@foreach(var category in Model)
+{
+    <li><a href="/Products/Index?category=@category.Id"><i class="fa fa-fw @category.Icon"></i> @category.Name</a></li>
+}

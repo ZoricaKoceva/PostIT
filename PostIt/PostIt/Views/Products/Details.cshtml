@@ -1,0 +1,42 @@
+﻿@model PostIt.Models.Product
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div class="product-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="@Model.getImage()" class="img-responsive" />
+            </div>
+            <div class="col-sm-6">
+                @if(Model.Approved == false)
+                {
+                    <div class="alert alert-warning">
+                        <b>Рекламата сеуште не е одобрена.</b><br />Истата не е видлива во пребарувањата и во самите категории.
+                    </div>
+                }
+                <h1>@Model.Title</h1>
+                <div class="category-name"><i class="fa fa-fw fa-calendar"></i> Објавено на: @Model.DateTime</div>
+                <div class="category-name"><i class="fa fa-fw fa-folder"></i> Категорија: @Model.Category.Name</div>
+                <p class="description">@Model.Description</p>
+                <h3 class="price"><span>Цена:</span>@String.Format("{0:N2}", Model.Price)  денари</h3>
+                <div class="contact-person">
+                    <h3>Лице за контакт: <b>@Model.User.FirstSecondName</b></h3>
+                    <div class="phone"><i class="fa fa-fw fa-phone"></i> @Model.User.PhoneNumber</div>
+                    <div class="phone"><i class="fa fa-fw fa-envelope"></i> @Model.User.Email</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".navbar-inverse .navbar-nav > li").removeClass("active");
+        })
+    </script>
+}

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<PostIt.Models.Product>
+
+<div class="products-area">
+    <div class="container">
+        <h1>Можеби ова ќе те интересира?<span> Следниве огласи се соодветни на твоите пребарувања.</span></h1>
+        <div class="row">
+            @foreach (var Product in Model)
+            {
+            <div class="col-md-3">
+                <div href="#" class="product-box">
+                    <div class="product-image" style="background:url('@Product.getImage()') center no-repeat;background-size:cover;">
+                        <p class="product-price">@String.Format("{0:N2}", Product.Price)<span>денари</span></p>
+                    </div>
+                    <div class="product-info">
+                        <a class="product-title" href="/Products/Details/@Product.Id">@Product.Title</a>
+                        <p class="product-user"><i class="fa fa-fw fa-user"></i>@Product.User.FirstSecondName</p>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (Product.Description.Length > 30)
+                    {
+                        <p class="product-description">@Product.Description.Substring(0, 30)</p>
+                    }
+                    else
+                    {
+                        <p class="product-description">@Product.Description</p>
+                    }
+                    <a href="/Products/Details/@Product.Id" class="btn btn-primary btn-block">Повеќе детали</a>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
